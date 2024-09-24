@@ -25,6 +25,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { alertMixin } from 'src/mixins/alert';
 
 export interface IconLink {
   title: string;
@@ -33,6 +34,7 @@ export interface IconLink {
 
 export default defineComponent({
   name: 'CardGallows',
+  mixins: [alertMixin],
 
   props: {
     title: {
@@ -53,7 +55,10 @@ export default defineComponent({
 
   methods: {
     handelHint() {
-      alert(this.hint);
+      if (!this.hint) {
+        return;
+      }
+      this.showTimeoutAlert(this.hint, true);
     },
   },
 });

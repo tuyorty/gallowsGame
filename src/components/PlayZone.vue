@@ -37,9 +37,11 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { alertMixin } from 'src/mixins/alert';
 
 export default defineComponent({
   name: 'PlayZone',
+  mixins: [alertMixin],
 
   emits: ['wrong-letter', 'start-game'],
 
@@ -71,6 +73,62 @@ export default defineComponent({
         ['Ракета', 'Летит в космос'],
         ['Звезда', 'Светит в ночи'],
         ['Луна', 'Светит ночью'],
+        ['Карандаш', 'Пишет на бумаге'],
+        ['Соль', 'Для приправы'],
+        ['Снег', 'Холодный белый'],
+        ['Лук', 'Овощ для салата'],
+        ['Молоко', 'Из коровы'],
+        ['Кофе', 'Пьют с утра'],
+        ['Чай', 'Зеленый или черный'],
+        ['Сахар', 'Сладкий'],
+        ['Хлеб', 'Всему голова'],
+        ['Мясо', 'Из животных'],
+        ['Рыба', 'Плавает в воде'],
+        ['Яблоко', 'Это ведь золотое ...'],
+        ['Банан', 'Любят макаки'],
+        ['Апельсин', 'Цитрус'],
+        ['Груша', 'Фрукт, но не яблоко'],
+        ['Виноград', 'Его любят топтать'],
+        ['Морковь', 'Полезна для зубов'],
+        ['Картофель', 'Петр 1 спасибо'],
+        ['Помидор', 'Сок с ним ужасен'],
+        ['Огурец', 'Кьюкьюмбер'],
+        ['Капуста', 'В ней рождаются'],
+        ['Свекла', 'Борщ был бы не борщ без нее'],
+        ['Репа', 'Её чешут'],
+        ['Чеснок', 'Для аромата'],
+        ['Перец', 'Острая штучка'],
+        ['Баклажан', 'Лада седан!?'],
+        ['Кабачок', 'Вкусная оранжевая субстанция'],
+        ['Тыква', 'Превратилась в карету'],
+        ['Манго', 'Заморский желтый фрукт'],
+        ['Киви', 'Шершавая кожура'],
+        ['Персик', 'Ребенок тех кто воевал против Спартанцев'],
+        ['Абрикос', 'На юге рос'],
+        ['Слива', 'Спелая садовая'],
+        ['Вишня', 'Костлявая внутри'],
+        ['Клубника', 'Ягода с усами'],
+        ['Черника', 'Ягода растет в лесах'],
+        ['Ежевика', 'Езжи, брат (ягода)'],
+        ['Голубика', 'Ягода продается в пятёрочке весь год'],
+        ['Малина', 'Эта сучка пахнет как ...'],
+        ['Клюква', 'Ягода растет на болотах'],
+        ['Облепиха', 'Чай из нее просто вышак'],
+        ['Рябина', 'Гроздями на снегу'],
+        ['Шиповник', 'Не соберешь не уколовшись '],
+        ['Земляника', 'Мини ягода с усами'],
+        ['Арбуз', 'Самый сок в августе'],
+        ['Дыня', 'Не арбуз'],
+        ['Ананас', 'В банках кольцами или кусочками'],
+        ['Гранат', 'Ложись!!!(фрукт)'],
+        ['Инжир', 'Смоко́вница обыкнове́нная'],
+        ['Финик', 'Машина (ягода)'],
+        ['Дуриан', 'Колючий фрукт'],
+        ['Маракуйя', 'Фрукт, плод ряда тропических лиан'],
+        ['Папайя', 'Заморская дыня'],
+        ['Лимон', 'Делает кислые мины'],
+        ['Лайм', 'Текила, соль, ...'],
+        ['Грейпфрут', 'Розовый фрукт'],
       ] as [string, string][],
       randomWord: '' as string,
       helpWord: '' as string,
@@ -124,7 +182,7 @@ export default defineComponent({
     takeRandomWord() {
       this.randomWordNumber = Math.floor(Math.random() * this.wordsLib.length);
       this.randomWord = this.wordsLib[this.randomWordNumber][0].toLowerCase();
-      this.helpWord = this.wordsLib[this.randomWordNumber][1].toLowerCase();
+      this.helpWord = this.wordsLib[this.randomWordNumber][1];
 
       this.ingame = true;
       this.heart = 0;
@@ -147,13 +205,34 @@ export default defineComponent({
     checkLetter() {
       this.guess = this.letterInput.toLowerCase();
 
+      if (
+        this.guess.length === this.randomWord.length &&
+        this.guess !== this.randomWord
+      ) {
+        this.showAlert('Попытка хороша, но не удачна', 'warning');
+        this.decreaseHeart(false);
+        this.letterInput = '';
+        return;
+      }
+      if (this.guess === this.randomWord) {
+        this.ingame = false;
+        this.showAlert('Молодец, ты победил!', 'positive');
+        this.letterInput = '';
+        this.openWord(this.guess);
+        return;
+      }
+
       if (!this.guess || this.guess.length !== 1) {
-        alert('Родной, не нервничай. Вводи одну буковку');
+        this.showAlert('Родной, не нервничай. Вводи одну буковку', 'warning');
         this.letterInput = '';
         return;
       }
 
       this.processLetter(this.guess);
+    },
+
+    openWord(word: string) {
+      this.answerArray = word.split('');
     },
 
     selectLetter(letter: string) {
@@ -163,13 +242,13 @@ export default defineComponent({
 
     processLetter(letter: string) {
       if (this.answerArray.includes(letter)) {
-        alert('Доброе утро! Такая буква уже открыта');
+        this.showAlert('Доброе утро! Такая буква уже открыта', 'warning');
         this.letterInput = '';
         return;
       }
 
       if (this.usedLetters.includes(letter)) {
-        alert('Эту буковку ты уже пробовал');
+        this.showAlert('Эту буковку ты уже пробовал', 'warning');
         this.letterInput = '';
         return;
       }
@@ -185,23 +264,34 @@ export default defineComponent({
         }
       }
 
+      this.decreaseHeart(found);
       if (!found) {
-        // alert('Не расстраивайся, такой буковки нету. Попробуй еще разик');
-        this.heart++;
-        this.$emit('wrong-letter');
-        this.images[this.heart - 1] = 'src/assets/heartBroken.svg';
-
-        if (this.heart > 5) {
-          alert('Ты проиграл :(');
-          this.ingame = false;
-        }
+        this.showAlert(
+          'Не расстраивайся, такой буковки нету. Попробуй еще разик',
+          'warning'
+        );
       }
 
-      this.letterInput = ''; // очищаем поле ввода
+      this.letterInput = '';
 
       if (this.remainigLetters === 0) {
         this.ingame = false;
-        alert('Молодец, ты победил!');
+        this.showAlert('Молодец, ты победил!', 'positive');
+      }
+    },
+
+    decreaseHeart(found: boolean) {
+      if (found) {
+        return;
+      }
+
+      this.heart++;
+      this.$emit('wrong-letter');
+      this.images[this.heart - 1] = 'src/assets/heartBroken.svg';
+
+      if (this.heart > 5) {
+        this.showAlert('Ты проиграл :(', 'negative');
+        this.ingame = false;
       }
     },
   },
