@@ -29,6 +29,7 @@
 import { defineComponent } from 'vue';
 import CardGallows, { IconLink } from 'src/components/CardGallows.vue';
 import PlayZone from 'src/components/PlayZone.vue';
+import { useQuasar } from 'quasar';
 
 const IconGallows: IconLink[] = [
   {
@@ -64,6 +65,26 @@ const IconGallows: IconLink[] = [
 export default defineComponent({
   name: 'MainLayout',
 
+  setup() {
+    const $q = useQuasar();
+
+    return {
+      infoAlertNegative() {
+        $q.notify({
+          type: 'negative',
+          message: 'Не расстраивайся, такой буковки нету. Попробуй еще разик',
+        });
+      },
+
+      infoALertStart() {
+        $q.notify({
+          type: 'positive',
+          message: 'Родной, желаю тебе удачи!',
+        });
+      },
+    };
+  },
+
   components: {
     CardGallows,
     PlayZone,
@@ -82,11 +103,13 @@ export default defineComponent({
       if (this.currentIndexCard < this.IconGallowsOpt.length - 1) {
         this.currentIndexCard++;
       }
+      this.infoAlertNegative();
     },
 
     startGame(hint: string) {
       this.currentIndexCard = 0;
       this.currentHint = hint;
+      this.infoALertStart();
     },
   },
 });

@@ -186,7 +186,7 @@ export default defineComponent({
       }
 
       if (!found) {
-        alert('Не расстраивайся, такой буковки нету. Попробуй еще разик');
+        // alert('Не расстраивайся, такой буковки нету. Попробуй еще разик');
         this.heart++;
         this.$emit('wrong-letter');
         this.images[this.heart - 1] = 'src/assets/heartBroken.svg';
