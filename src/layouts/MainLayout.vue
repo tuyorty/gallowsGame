@@ -2,22 +2,16 @@
   <div class="flex flex-center bg-gradient">
     <div class="custom-container shadow-6">
       <div class="q-pa-md example-row-equal-width">
-        <div class="row flex flex-center">
+        <div class="row flex-center">
           <p class="text-weight-thin text-h4">Виселица!</p>
         </div>
         <div class="row">
           <div class="col-7">
-            <CardGallows
-              :title="IconGallowsOpt[currentIndexCard].title"
-              :icon="IconGallowsOpt[currentIndexCard].icon"
-              :hint="currentHint"
-            />
+            <CardGallows :title="IconGallowsOpt[currentIndexCard].title" :icon="IconGallowsOpt[currentIndexCard].icon"
+              :hint="currentHint" />
           </div>
           <div class="col-5">
-            <PlayZone
-              @wrong-letter="handleWrongLetter"
-              @start-game="startGame"
-            />
+            <PlayZone @wrong-letter="handleWrongLetter" @start-game="startGame" />
           </div>
         </div>
       </div>
@@ -97,20 +91,29 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .custom-container {
-  background-color: rgba(128, 128, 128, 0.3); /* полупрозрачный серый фон */
-  border: 2px solid rgba(128, 128, 128, 0.8); /* менее прозрачный контур */
-  border-radius: 15px; /* закругленные углы */
+  background-color: rgba(128, 128, 128, 0.3);
+  /* полупрозрачный серый фон */
+  border: 2px solid rgba(128, 128, 128, 0.8);
+  /* менее прозрачный контур */
+  border-radius: 15px;
+  /* закругленные углы */
   width: 50%;
-  height: 70%;
+  min-height: 70%;
   display: flex;
+  overflow: auto;
 }
 
 .example-row-equal-width {
-  .row > div {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+
+  .row>div {
     padding: 10px 15px;
   }
 
-  .row + .row {
+  .row+.row {
     margin-top: 1rem;
   }
 }
@@ -118,19 +121,19 @@ export default defineComponent({
 .bg-gradient {
   margin: 0;
   padding: 0;
-  width: 100vw; /* 100% ширины экрана */
-  height: 100vh; /* 100% высоты экрана */
+  width: 100vw;
+  /* 100% ширины экрана */
+  height: 100vh;
+  /* 100% высоты экрана */
   font-family: 'Comic Sans MS', cursive, sans-serif;
-  background-image: linear-gradient(
-    to right,
-    #1abc9c,
-    #16a085,
-    #2ecc71,
-    #27ae60,
-    #3498db,
-    #2980b9,
-    #9b59b6
-  );
+  background-image: linear-gradient(to right,
+      #1abc9c,
+      #16a085,
+      #2ecc71,
+      #27ae60,
+      #3498db,
+      #2980b9,
+      #9b59b6);
   background-size: 400%;
   animation: bganimation 20s infinite;
 }
@@ -139,9 +142,11 @@ export default defineComponent({
   0% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
+
   100% {
     background-position: 0% 50%;
   }

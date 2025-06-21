@@ -3,35 +3,18 @@
     <p class="text-h5 q-mb-none">{{ answerArray.join(' ') }}</p>
   </div>
   <div class="row-12 q-mt-md">
-    <q-input
-      outlined
-      :disable="!ingame"
-      v-model="letterInput"
-      label="Тут угадывать"
-      @keyup.enter="checkLetter"
-    />
+    <q-input outlined :disable="!ingame" v-model="letterInput" label="Тут угадывать" @keyup.enter="checkLetter" />
   </div>
   <div class="row q-mt-md flex flex-center">
     <q-btn v-if="!ingame" @click="takeRandomWord()" size="xl" label="Играть" />
   </div>
   <div v-if="ingame" class="row q-mt-md flex flex-wrap alphabet-container">
-    <q-btn
-      v-for="(letter, index) in alphabet"
-      :key="index"
-      @click="selectLetter(letter)"
-      :label="letter"
+    <q-btn v-for="(letter, index) in alphabet" :key="index" @click="selectLetter(letter)" :label="letter"
       :disable="usedLetters.includes(letter.toLowerCase())"
-      :class="{ 'crossed-out': usedLetters.includes(letter.toLowerCase()) }"
-      size="sm"
-    />
+      :class="{ 'crossed-out': usedLetters.includes(letter.toLowerCase()) }" size="sm" />
   </div>
   <div class="row" style="position: absolute; bottom: 18%; right: 31%">
-    <img
-      v-for="(image, index) in images"
-      :key="index"
-      :src="image"
-      style="width: 25px; height: 25px"
-    />
+    <img v-for="(image, index) in images" :key="index" :src="image" style="width: 25px; height: 25px" />
   </div>
 </template>
 
@@ -291,6 +274,7 @@ export default defineComponent({
 
       if (this.heart > 5) {
         this.showAlert('Ты проиграл :(', 'negative');
+        this.openWord(this.randomWord)
         this.ingame = false;
       }
     },
@@ -300,9 +284,12 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .border-word {
-  background-color: rgba(128, 128, 128, 0); /* полупрозрачный серый фон */
-  border: 1px solid rgba(57, 57, 57, 0.5); /* менее прозрачный контур */
-  border-radius: 6px; /* закругленные углы */
+  background-color: rgba(128, 128, 128, 0);
+  /* полупрозрачный серый фон */
+  border: 1px solid rgba(57, 57, 57, 0.5);
+  /* менее прозрачный контур */
+  border-radius: 6px;
+  /* закругленные углы */
   height: 15%;
 }
 
